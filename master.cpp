@@ -1,6 +1,6 @@
 #include <Wire.h>
 
-#define tempoSemaforo 5000 // valor a ser multiplicado  de acordo com quant de carros que passam
+#define tempoSemaforo 6000 // valor a ser multiplicado  de acordo com quant de carros que passam
 
 #define SLAVE1 1
 #define SLAVE2 2
@@ -12,8 +12,7 @@ int i = 0;
 void setup() {
     Wire.begin();
     Serial.begin(9600);
-    delay(800); // Esperar Slaves inicializarem
-    Serial.println("Master iniciado");
+    delay(600); // Esperar Slaves inicializarem
 }
 
 void loop() {

@@ -45,8 +45,6 @@ void setup() {
 
     Wire.begin(SLAVE_ADDRESS);
     Serial.begin(9600);
-    Serial.print("Slave iniciado no endereço ");
-    Serial.println(SLAVE_ADDRESS);
 
     Wire.onReceive(receiveEvent);
 }
@@ -60,14 +58,28 @@ void receiveEvent(int bytes) {
     int command = Wire.read(); // Read the command sent by the master
 
     if (command == 1) {
+
+        if (digitalRead(LED_RED) == HIGH) {
+            delay(2000);          
+        }
+
         VGreen();
         DGreen();
         PRed();
     } else if (command == 0) {
+
+        if (digitalRead(LED_GREEN) == HIGH) {
+            VYellow();
+            DYellow();
+            delay(2000);          
+        }
+
+        
         VRed();
         DRed();
         PGreen();
     }
+    delay(4000);
 }
 
 void VGreen(){
