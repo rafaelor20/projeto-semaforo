@@ -1,7 +1,11 @@
-Aluno: Rafael Oliveira Rosário
+##Aluno: Rafael Oliveira Rosário
 
-Projeto: Semáforo Inteligente
-Descrição
+##Projeto: Semáforo Inteligente
+##Link para o projeto no Tinkercad:
+
+https://www.tinkercad.com/things/2MNBBfQc62d-semaforo-inteligente?sharecode=ajXtGmocL1wko_xPfZG3Ry3RFCWylDxeTzO703K_i_8
+
+##Descrição:
 
 Este projeto simula o funcionamento de um cruzamento entre duas ruas utilizando um sistema de semáforos inteligentes controlados por Arduinos. O objetivo é garantir um fluxo de trânsito eficiente e seguro para pedestres e veículos.
 
