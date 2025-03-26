@@ -1,104 +1,39 @@
 #include <Wire.h>
 
-#define tempoSemaforo 10000 // valor a ser multiplicado  de acordo com quant de carros que passam
+#define tempoSemaforo 5000 // valor a ser multiplicado  de acordo com quant de carros que passam
 
-typedef struct {
-    int id;
-    int fluxo;
-    int pedestre;
-    int verde;
-    int amarelo;
-    int vermelho;
-    int direitaVerde;
-    int direitaAmarelo;
-    int direitaVermelho;
-    int pedestreVerde;
-    int pedestreVermelho;
-    int falha
-} Slave;
+#define SLAVE1 1
+#define SLAVE2 2
+#define SLAVE3 3
+#define SLAVE4 4
 
-void Slave_init(Slave *slave, int id) {
-    slave->id = id;
-    slave->fluxo = 0;
-    slave->pedestre = 0;
-    slave->verde = 0;
-    slave->amarelo = 0;
-    slave->vermelho = 0;
-    slave->direitaVerde = 0;
-    slave->direitaAmarelo = 0;
-    slave->direitaVermelho = 0;
-    slave->pedestreVerde = 0;
-    slave->pedestreVermelho = 0;
-    slave->falha = 0;
-}
-
+int i = 0;
 
 void setup() {
-    Wire.begin(); // Inicializa o Arduino Central como master
+    Wire.begin();
     Serial.begin(9600);
-
-    Slave slaves[4];
-    for (int i = 0; i < 4; i++) {
-        Slave_init(&slaves[i], i + 1);
-    }
+    delay(800); // Esperar Slaves inicializarem
+    Serial.println("Master iniciado");
 }
 
 void loop() {
+    for (int slave = SLAVE1; slave <= SLAVE4; slave++) {
+        Wire.beginTransmission(slave);
+        int command = ((slave + i) % 2 == 0) ? 1 : 0; // 1 para Slaves pares, 0 para ímpares
+        Wire.write(command); // Envia o comando para o Slave
+        Wire.endTransmission();
+        
+        Serial.print("Comando enviado para o Slave ");
+        Serial.print(slave);
+        Serial.print(": ");
+        Serial.println(command);
 
-
-}
-
-
-void semaforoVerde(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoVerde");
-    Wire.endTransmission();
-}
-
-void semaforoAmarelo(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoAmarelo");
-    Wire.endTransmission();
-}
-
-void semaforoVermelho(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoVermelho");
-    Wire.endTransmission();
-}
-
-void semaforoDireitaVerde(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoDireitaVerde");
-    Wire.endTransmission();
-}
-
-void semaforoDireitaAmarelo(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoDireitaAmarelo");
-    Wire.endTransmission();
-}
-
-void semaforoDireitaVermelho(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoDireitaVermelho");
-    Wire.endTransmission();
-}
-
-void semaforoPedestreVerde(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoPedestreVerde");
-    Wire.endTransmission();
-}
-
-void semaforoPedestreVermelho(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("semaforoPedestreVermelho");
-    Wire.endTransmission();
-}
-
-void alertaFalha(int slave) {
-    Wire.beginTransmission(slave);
-    Wire.write("alertaFalha");
-    Wire.endTransmission();
+        
+        delay(50); // Delay para garantir que o Slave tenha tempo para processar
+    }
+    i++;
+    if (i > 9 ){
+        i = 0;
+    }
+  delay(tempoSemaforo);
 }

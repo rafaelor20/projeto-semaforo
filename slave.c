@@ -1,6 +1,6 @@
 #include <Wire.h>
 
-#define SLAVE_ID 1  // Ajuste conforme o Slave (1 a 4)
+#define SLAVE_ADDRESS 1 // Alterar conforme necessário
 
 #define LED_GREEN 2
 #define LED_YELLOW 3
@@ -10,96 +10,108 @@
 #define LED_D_YELLOW 6
 #define LED_D_RED 7
 
-#define LED_PED_GREEN 8
-#define LED_PED_RED 9
+#define LED_P_GREEN 8
+#define LED_P_RED 9
 
-#define SENSOR_VEICULOS 10 // sensor de veiculos simulado por um botão
-#define BOTAO_PEDESTRE 11
+#define P_BUTTON 10
+#define V_SENSOR 11
 
 void setup() {
-    Wire.begin(SLAVE_ID);
+    pinMode(LED_GREEN, OUTPUT);
+    pinMode(LED_YELLOW, OUTPUT);
+    pinMode(LED_RED, OUTPUT);
+
+    pinMode(LED_D_GREEN, OUTPUT);
+    pinMode(LED_D_YELLOW, OUTPUT);
+    pinMode(LED_D_RED, OUTPUT);
+
+    pinMode(LED_P_GREEN, OUTPUT);
+    pinMode(LED_P_RED, OUTPUT);
+
+    pinMode(P_BUTTON, INPUT);
+    pinMode(V_SENSOR, INPUT);
+  
+    VGreen();
+    DGreen();
+    PGreen();
+    delay(200);
+    VYellow();
+    DYellow();
+    delay(200);
+    VRed();
+    DRed();
+    PRed();
+    delay(200);
+
+    Wire.begin(SLAVE_ADDRESS);
     Serial.begin(9600);
-    pinMode(SENSOR_VEICULOS, INPUT_PULLUP);
-    pinMode(BOTAO_PEDESTRE, INPUT_PULLUP);
-    
+    Serial.print("Slave iniciado no endereço ");
+    Serial.println(SLAVE_ADDRESS);
+
+    Wire.onReceive(receiveEvent);
 }
 
 void loop() {
-    if (Wire.available()) {
-        String comando = lerComandoI2C();
+    
+}
 
-        if (comando == "semaforoVerde") semaforoVerde();
-        else if (comando == "semaforoAmarelo") semaforoAmarelo();
-        else if (comando == "semaforoVermelho") semaforoVermelho();
+// Handle data received from the master
+void receiveEvent(int bytes) {
+    int command = Wire.read(); // Read the command sent by the master
 
-        else if (comando == "semaforoPedestreVerde") semaforoPedestreVerde();
-        else if (comando == "semaforoPedestreVermelho") semaforoPedestreVermelho();
-
-        else if (comando == "alertaFalha") alertaFalha();
-    }
-
-    if (digitalRead(SENSOR_VEICULOS) == LOW) {
-        enviarFluxoAoMaster();
-    }
-
-    if (digitalRead(BOTAO_PEDESTRE) == LOW) {
-        enviarBotaoPedestreAoMaster();
+    if (command == 1) {
+        VGreen();
+        DGreen();
+        PRed();
+    } else if (command == 0) {
+        VRed();
+        DRed();
+        PGreen();
     }
 }
 
-void semaforoVerde() {
+void VGreen(){
     digitalWrite(LED_GREEN, HIGH);
     digitalWrite(LED_YELLOW, LOW);
     digitalWrite(LED_RED, LOW);
 }
 
-void semaforoAmarelo() {
+void VYellow(){
     digitalWrite(LED_GREEN, LOW);
     digitalWrite(LED_YELLOW, HIGH);
     digitalWrite(LED_RED, LOW);
 }
 
-void semaforoVermelho() {
+void VRed(){
     digitalWrite(LED_GREEN, LOW);
     digitalWrite(LED_YELLOW, LOW);
     digitalWrite(LED_RED, HIGH);
 }
 
-void semaforoDireitaVerde() {
+void DGreen(){
     digitalWrite(LED_D_GREEN, HIGH);
     digitalWrite(LED_D_YELLOW, LOW);
     digitalWrite(LED_D_RED, LOW);
 }
 
-void semaforoDireitaAmarelo() {
+void DYellow(){
     digitalWrite(LED_D_GREEN, LOW);
     digitalWrite(LED_D_YELLOW, HIGH);
     digitalWrite(LED_D_RED, LOW);
 }
 
-void semaforoDireitaVermelho() {
+void DRed(){
     digitalWrite(LED_D_GREEN, LOW);
     digitalWrite(LED_D_YELLOW, LOW);
     digitalWrite(LED_D_RED, HIGH);
 }
 
-void semaforoPedestreVerde() {
-    digitalWrite(LED_PED_GREEN, HIGH);
-    digitalWrite(LED_PED_RED, LOW);
+void PGreen(){
+    digitalWrite(LED_P_GREEN, HIGH);
+    digitalWrite(LED_P_RED, LOW);
 }
 
-void semaforoPedestreVermelho() {
-    digitalWrite(LED_PED_GREEN, LOW);
-    digitalWrite(LED_PED_RED, HIGH);
-}
-
-void alertaFalha() {
-    int i = 0;
-    while (i < 100000) { // 100000 é um valor arbitrário
-        digitalWrite(LED_YELLOW, HIGH);
-        delay(500);
-        digitalWrite(LED_YELLOW, LOW);
-        delay(500);
-        i++;
-    }
+void PRed(){
+    digitalWrite(LED_P_GREEN, LOW);
+    digitalWrite(LED_P_RED, HIGH);
 }
