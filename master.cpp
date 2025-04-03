@@ -1,6 +1,7 @@
 #include <Wire.h>
 
-#define tempoSemaforo 6000 // valor a ser multiplicado  de acordo com quant de carros que passam
+#define tempoSemaforo 5000 // valor a ser multiplicado  de acordo com quant de carros que passam
+#define tempoAmarelo 2000 // valor a ser multiplicado de acordo com quant de carros que passam
 
 #define SLAVE1 1
 #define SLAVE2 2
@@ -27,12 +28,26 @@ void loop() {
         Serial.print(": ");
         Serial.println(command);
 
-        
         delay(50); // Delay para garantir que o Slave tenha tempo para processar
     }
+
+    delay(tempoSemaforo - tempoAmarelo);
+
+    for (int slave = SLAVE1; slave <= SLAVE4; slave++) {
+        Wire.beginTransmission(slave);
+        int command = 2;
+        if((slave + i) % 2 == 0){
+            Wire.write(command); // Envia o comando para o Slave
+            Wire.endTransmission();
+        }
+        delay(50); // Delay para garantir que o Slave tenha tempo para processar
+    }
+
+    delay(tempoAmarelo); // Espera o tempo do amarelo
+
     i++;
     if (i > 9 ){
         i = 0;
     }
-  delay(tempoSemaforo);
+    
 }
