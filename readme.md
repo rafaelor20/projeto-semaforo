@@ -13,9 +13,9 @@ Este projeto simula o funcionamento de um cruzamento entre duas ruas utilizando 
 
 Semáforos para Veículos: Cada sentido da rua possui:
 
-1 semáforo para seguir em frente.
+    1 semáforo para seguir em frente.
 
-1 semáforo para virar à direita.
+    1 semáforo para virar à direita.
 
 Semáforos para Pedestres: Cada rua possui um semáforo exclusivo para pedestres.
 
