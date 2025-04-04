@@ -59,7 +59,7 @@ void receiveEvent(int bytes) {
 
     if (command == 1) {
         VGreen();
-        DGreen();
+        DRed();
         PRed();
     } else if (command == 0) {
         VRed();
@@ -67,7 +67,7 @@ void receiveEvent(int bytes) {
         PGreen();
     } else if (command == 2) {
         VYellow();
-        DYellow();
+        DRed();
         PRed();
     }
     delay(50);
